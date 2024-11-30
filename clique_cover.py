@@ -1,5 +1,4 @@
 import subprocess
-import time
 from argparse import ArgumentParser
 
 def load_instance(input_file):
@@ -65,7 +64,7 @@ def call_solver(cnf, output_file, solver_path):
         result = subprocess.run(
             solver_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
-        output = "\n".join(line for line in result.stdout.splitlines() if not line.startswith('c')).strip() # remove comments in solver's output
+        output = "\n".join(line for line in result.stdout.splitlines()).strip() # remove comments in solver's output
         return output
     except FileNotFoundError:
         print("Error: SAT solver not found.")
@@ -74,14 +73,17 @@ def call_solver(cnf, output_file, solver_path):
         print(f"Error running the SAT solver: {e}")
         return None
 
-def parse_solver_output(output):
+def parse_solver_output(output, verbosity):
     # parse the solver output
-    # return SAT/UNSAT and model if possible
+    # return statistics SAT/UNSAT and model if possible
     lines = output.split("\n")
+    stats = []
     status = None
     model = None
     for line in lines:
         line = line.strip()
+        if line.startswith("c "): # comment lines
+            stats.append(line[2:])
         if line.startswith("s "):  # status line
             if "UNSATISFIABLE" in line:
                 status = "UNSAT"
@@ -92,7 +94,7 @@ def parse_solver_output(output):
             model = list(map(int, line[2:].split()))
             if model and model[-1] == 0:
                 model.pop()
-    return status, model
+    return stats, status, model
 
 def decode_cliques(model, k):
     cliques = {i: [] for i in range(1, k + 1)}
@@ -111,8 +113,6 @@ def print_cliques(cliques):
         print(f"Clique {c}: {sorted(vertices)}")
 
 if __name__ == "__main__":
-    start_time = time.time()
-
     parser = ArgumentParser()
     parser.add_argument(
         "-k",
@@ -142,6 +142,14 @@ if __name__ == "__main__":
         type=str,
         help="The SAT solver to be used"
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        default=0,
+        type=int,
+        choices =range(0, 2),
+        help="Verbosity of the script"
+    )
     args = parser.parse_args()
 
     # load the input instance
@@ -155,14 +163,13 @@ if __name__ == "__main__":
 
     # interpret and print the result
     if output:
-        status, model = parse_solver_output(output)
+        stats, status, model = parse_solver_output(output, args.verbose)
+        if args.verbose == 1:
+            for line in stats:
+                print(line)
         if status == "UNSAT":
             print("UNSATISFIABLE: No solution exists for the given instance")
-        else:
+        elif status == "SAT":
             cliques = decode_cliques(model, args.cliques)
             print("SATISFIABLE: Solution found")
             print_cliques(cliques)
-
-    end_time = time.time()
-    runtime = end_time - start_time
-    print(f"Script runtime: {runtime:.2f} seconds")
