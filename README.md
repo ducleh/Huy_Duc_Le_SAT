@@ -1,6 +1,6 @@
 # Clique cover SAT solver
 
-This repository contains a Python implementation for solving the clique cover problem using SAT reduction. The script encodes the problem into Conjunctive Normal Form (CNF), solves it, returns SAT/UNSAT, clique labeling if possible and time spent running the script.
+This repository contains a Python implementation for solving the clique cover problem using SAT reduction. The script encodes the problem into Conjunctive Normal Form (CNF), solves it, returns statistiscs, SAT/UNSAT, clique labeling if possible and time spent running the script.
 
 The SAT solver used is [Glucose 4.2.1](https://github.com/audemard/glucose). A precompiled UNIX binary of Glucose is included.
 
@@ -33,7 +33,7 @@ The encoding is obviously very primitive and can be optimized in numerous ways, 
 ## User documentation
 Usage
 ```
-clique_cover.py [-h] [-k CLIQUES] [-i INPUT] [-o OUTPUT] [-s SOLVER]
+clique_cover.py [-h] [-k CLIQUES] [-i INPUT] [-o OUTPUT] [-s SOLVER] [-v VERBOSE]
 ```
 
 Options:
@@ -42,6 +42,7 @@ Options:
 * -i INPUT, --input INPUT: Input file containing the graph description. Default: "input.in".
 * -o OUTPUT, --output OUTPUT: Output file for the DIMACS format (CNF formula). Default: "formula.cnf".
 * -s SOLVER, --solver SOLVER: Path to the SAT solver executable. Default: "./glucose".
+* -v VERBOSE, --verbose VERBOSE: Verbosity level. Default: 0.
 
 ## Instances
 Input graphs:
