@@ -28,7 +28,7 @@ The encoding introduces variables for each pair of vertex and clique, denoted x_
 * Clauses that prevent a vertex from being to more than one clique
 * Clauses that prevent two disconnected vertices from being in the same clique
 
-The encoding is obviously very primitive and can be optimized in numerous ways, such as decomposing the graph into strongly connected components, encoding pairs of vertices instead of vertex-clique pair, terminating earlier by incrementing the number of cliques, etc.
+The encoding is obviously very primitive and can be optimized in numerous ways, such as encoding pairs of vertices instead of vertex-clique pair, terminating earlier by incrementing the number of cliques, etc.
 
 ## User documentation
 Usage
