@@ -54,7 +54,6 @@ By testing with multiple graphs, the number of vertices and edges in a graph do 
 
 ## Extensions
 * Alternative SAT solvers can be tried with the scripts.
-* Optimizations such as ones mentioned above can be studied.
 * Extend the problem to find the smallest *k*-clique.
 
 ## Acknowledgement
